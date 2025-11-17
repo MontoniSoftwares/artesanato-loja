@@ -50,7 +50,7 @@ onMounted(() => {
 });
 
 function abrirWhatsApp(produto) {
-  const numeroLoja = "5522999998352";
+  const numeroLoja = "5522988682317";
   const texto = `Olá! Tenho interesse no produto: ${produto.nome}. Poderia me dar mais informações?`;
   const url = `https://wa.me/${numeroLoja}?text=${encodeURIComponent(texto)}`;
   window.open(url, "_blank");

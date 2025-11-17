@@ -122,6 +122,15 @@ function editarProdutoBtn(produto) {
 
 async function salvarProduto() {
   try {
+    // Remover espaços extras
+    novoProduto.value.nome = novoProduto.value.nome.trim();
+    novoProduto.value.descricao = novoProduto.value.descricao.trim();
+
+    // Corrigir erro comum no nome
+    if (novoProduto.value.nome.toLowerCase() === "porta absorbente") {
+      novoProduto.value.nome = "Porta Absorvente";
+    }
+
     if (selectedFile) {
       const url = await uploadImageToImgBB(selectedFile);
       novoProduto.value.foto = url;
@@ -132,13 +141,16 @@ async function salvarProduto() {
       novoProduto.value.foto = produtoAtual?.foto || "";
     }
 
+    const { id, ...data } = novoProduto.value;
+
     if (editando.value) {
       const produtoRef = doc(db, "produtos", novoProduto.value.id);
-      const { id, ...data } = novoProduto.value;
       await updateDoc(produtoRef, data);
       alert("Produto atualizado com sucesso!");
     } else {
-      await addDoc(produtosCollection, novoProduto.value);
+      // Remove o id para não enviar null ao Firestore
+      delete novoProduto.value.id;
+      await addDoc(produtosCollection, data);
       alert("Produto criado com sucesso!");
     }
 
