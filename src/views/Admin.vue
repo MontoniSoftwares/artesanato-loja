@@ -25,7 +25,12 @@
         Peça única
       </label>
 
-      <button type="submit">Salvar Produto</button>
+      <button type="submit">
+        {{ editando ? "Atualizar Produto" : "Salvar Produto" }}
+      </button>
+      <button v-if="editando" type="button" @click="cancelarEdicao">
+        Cancelar
+      </button>
     </form>
 
     <div class="lista-produtos">
@@ -39,6 +44,7 @@
           alt=""
           style="max-width: 100px; border-radius: 8px; margin-right: 8px"
         />
+        <button @click="editarProdutoBtn(produto)">Editar</button>
         <button @click="deletarProduto(produto.id)">Excluir</button>
       </div>
     </div>
@@ -52,6 +58,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -63,6 +70,7 @@ const router = useRouter();
 
 const produtos = ref([]);
 const novoProduto = ref({
+  id: null,
   nome: "",
   descricao: "",
   preco: 0,
@@ -70,7 +78,7 @@ const novoProduto = ref({
   disponivel: true,
   unico: false,
 });
-
+const editando = ref(false);
 let selectedFile = null;
 
 const produtosCollection = collection(db, "produtos");
@@ -90,7 +98,6 @@ async function uploadImageToImgBB(file) {
       body: formData,
     }
   );
-
   const result = await response.json();
   if (result.success) {
     return result.data.url;
@@ -107,31 +114,60 @@ async function carregarProdutos() {
   }));
 }
 
+function editarProdutoBtn(produto) {
+  novoProduto.value = { ...produto }; // cópia para edição
+  editando.value = true;
+  selectedFile = null;
+}
+
 async function salvarProduto() {
   try {
     if (selectedFile) {
       const url = await uploadImageToImgBB(selectedFile);
       novoProduto.value.foto = url;
+    } else if (editando.value) {
+      const produtoAtual = produtos.value.find(
+        (p) => p.id === novoProduto.value.id
+      );
+      novoProduto.value.foto = produtoAtual?.foto || "";
     }
-    await addDoc(produtosCollection, novoProduto.value);
-    novoProduto.value = {
-      nome: "",
-      descricao: "",
-      preco: 0,
-      foto: "",
-      disponivel: true,
-      unico: false,
-    };
-    selectedFile = null;
+
+    if (editando.value) {
+      const produtoRef = doc(db, "produtos", novoProduto.value.id);
+      const { id, ...data } = novoProduto.value;
+      await updateDoc(produtoRef, data);
+      alert("Produto atualizado com sucesso!");
+    } else {
+      await addDoc(produtosCollection, novoProduto.value);
+      alert("Produto criado com sucesso!");
+    }
+
+    cancelarEdicao();
     carregarProdutos();
   } catch (error) {
     alert("Erro ao salvar produto: " + error.message);
   }
 }
 
+function cancelarEdicao() {
+  editando.value = false;
+  novoProduto.value = {
+    id: null,
+    nome: "",
+    descricao: "",
+    preco: 0,
+    foto: "",
+    disponivel: true,
+    unico: false,
+  };
+  selectedFile = null;
+}
+
 async function deletarProduto(id) {
-  await deleteDoc(doc(db, "produtos", id));
-  carregarProdutos();
+  if (confirm("Tem certeza que deseja excluir este produto?")) {
+    await deleteDoc(doc(db, "produtos", id));
+    carregarProdutos();
+  }
 }
 
 function sair() {
@@ -146,12 +182,14 @@ onMounted(() => {
 <style scoped>
 .admin-container {
   max-width: 700px;
+  width: 100%;
   margin: 2rem auto;
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fff0f6;
   position: relative;
+  box-sizing: border-box;
 }
 form {
   display: flex;
@@ -165,7 +203,7 @@ input[type="number"] {
   font-size: 1rem;
 }
 button {
-  width: 140px;
+  width: 120px;
   padding: 0.6rem;
   background: #d72660;
   color: white;
@@ -174,6 +212,7 @@ button {
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
+  margin-right: 0.4rem;
 }
 button:hover {
   background: #ad1850;
@@ -193,7 +232,9 @@ button:hover {
   align-items: center;
 }
 .btn-sair {
-  background: #555;
+  width: 65px;
+  padding: 0.6rem;
+  background: #af3065;
   color: white;
   border: none;
   border-radius: 18px;
