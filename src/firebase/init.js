@@ -1,22 +1,18 @@
-// src/firebase/init.js
-
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBQJhkiOyWpEp6aSMn3Z9ZrW0WpfUic1fY",
-  authDomain: "mimo-artesanatos.firebaseapp.com",
-  projectId: "mimo-artesanatos",
-  storageBucket: "mimo-artesanatos.firebasestorage.app",
-  messagingSenderId: "314107343774",
-  appId: "1:314107343774:web:2509a62b1394a58e855c8f",
-  measurementId: "G-ZPZQLTNJWN",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Inicializa Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-// Inicializa Firestore
 const db = getFirestore(firebaseApp);
 
 export default db;
