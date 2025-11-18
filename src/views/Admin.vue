@@ -62,7 +62,9 @@ import {
 } from "firebase/firestore";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import db from "../firebase/init";
+
+import { signOut } from "firebase/auth"; // importar signOut para logout
+import db, { auth } from "../firebase/init";
 
 const API_KEY_IMGBB = "c84a5731b24f82f3da759d1f73e1c3f1";
 
@@ -182,8 +184,14 @@ async function deletarProduto(id) {
   }
 }
 
-function sair() {
-  router.push("/produtos");
+async function sair() {
+  try {
+    await signOut(auth);
+    alert("Logout realizado com sucesso!");
+    router.push("/login"); // Ajuste o caminho para sua rota de login
+  } catch (error) {
+    alert("Erro ao fazer logout: " + error.message);
+  }
 }
 
 onMounted(() => {
