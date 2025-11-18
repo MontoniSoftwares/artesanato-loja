@@ -184,7 +184,7 @@ async function sair() {
   try {
     await signOut(auth);
     alert("Logout realizado com sucesso!");
-    router.push("/login");
+    router.push("/produtos"); // redireciona para a página de produtos após logout
   } catch (error) {
     alert("Erro ao fazer logout: " + error.message);
   }
