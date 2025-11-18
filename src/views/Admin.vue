@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { signOut } from "firebase/auth"; // importar signOut para logout
+import { signOut } from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -63,7 +63,7 @@ import {
 } from "firebase/firestore";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { db } from "../firebase/init";
+import { auth, db } from "../firebase/init";
 
 const API_KEY_IMGBB = "c84a5731b24f82f3da759d1f73e1c3f1";
 
@@ -116,18 +116,16 @@ async function carregarProdutos() {
 }
 
 function editarProdutoBtn(produto) {
-  novoProduto.value = { ...produto }; // cópia para edição
+  novoProduto.value = { ...produto };
   editando.value = true;
   selectedFile = null;
 }
 
 async function salvarProduto() {
   try {
-    // Remover espaços extras
     novoProduto.value.nome = novoProduto.value.nome.trim();
     novoProduto.value.descricao = novoProduto.value.descricao.trim();
 
-    // Corrigir erro comum no nome
     if (novoProduto.value.nome.toLowerCase() === "porta absorbente") {
       novoProduto.value.nome = "Porta Absorvente";
     }
@@ -149,7 +147,6 @@ async function salvarProduto() {
       await updateDoc(produtoRef, data);
       alert("Produto atualizado com sucesso!");
     } else {
-      // Remove o id para não enviar null ao Firestore
       delete novoProduto.value.id;
       await addDoc(produtosCollection, data);
       alert("Produto criado com sucesso!");
@@ -187,7 +184,7 @@ async function sair() {
   try {
     await signOut(auth);
     alert("Logout realizado com sucesso!");
-    router.push("/login"); // Ajuste o caminho para sua rota de login
+    router.push("/login");
   } catch (error) {
     alert("Erro ao fazer logout: " + error.message);
   }

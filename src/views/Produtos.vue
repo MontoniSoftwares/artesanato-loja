@@ -33,7 +33,6 @@ import { useRouter } from "vue-router";
 import { db } from "../firebase/init";
 
 const router = useRouter();
-
 const produtos = ref([]);
 
 async function carregarProdutos() {
@@ -57,13 +56,7 @@ function abrirWhatsApp(produto) {
 }
 
 function tentarAcessoAdmin() {
-  const senha = window.prompt("Digite a senha de admin:");
-  if (senha === "@Matrix") {
-    alert("Acesso concedido! Navegando para a área de administração.");
-    router.push("/admin");
-  } else {
-    alert("Senha incorreta!");
-  }
+  router.push("/login"); // Redireciona para tela oficial de login Firebase Auth
 }
 </script>
 
@@ -78,7 +71,6 @@ function tentarAcessoAdmin() {
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(215, 38, 96, 0.15);
 }
-
 h1 {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -88,32 +80,27 @@ h1 {
   text-transform: uppercase;
   text-shadow: 1px 1px 3px rgba(215, 38, 96, 0.3);
 }
-
 .cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2.5rem;
   justify-items: center;
 }
-
 @media (max-width: 1200px) {
   .cards {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-
 @media (max-width: 900px) {
   .cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
 @media (max-width: 600px) {
   .cards {
     grid-template-columns: 1fr;
   }
 }
-
 .card {
   border: 1px solid #e1cbd7;
   border-radius: 18px;
@@ -127,12 +114,10 @@ h1 {
   box-shadow: 0 4px 12px rgba(238, 201, 210, 0.8);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
 .card:hover {
   transform: translateY(-6px) scale(1.04);
   box-shadow: 0 8px 20px rgba(215, 38, 96, 0.4);
 }
-
 .card-img {
   width: 260px;
   height: 260px;
@@ -142,42 +127,35 @@ h1 {
   box-shadow: 0 4px 14px rgba(222, 194, 215, 0.6);
   transition: box-shadow 0.3s ease;
 }
-
 .card-img:hover {
   box-shadow: 0 6px 18px rgba(215, 38, 96, 0.6);
 }
-
 h3 {
   font-weight: 700;
   color: #8b194b;
   margin-bottom: 0.4rem;
   letter-spacing: 0.03em;
 }
-
 p {
   color: #5c2a3d;
   font-weight: 500;
   margin: 0.3rem 0;
   line-height: 1.3;
 }
-
 .preco {
   font-size: 1.1rem;
   font-weight: 700;
   color: #d72660;
   margin-top: 0.6rem;
 }
-
 .disponibilidade {
   font-style: italic;
   margin-bottom: 0.6rem;
 }
-
 .opcoes span {
   font-weight: 600;
   color: #a63556;
 }
-
 button {
   background: #d72660;
   color: #fff;
@@ -192,12 +170,10 @@ button {
   transition: background 0.3s ease;
   box-shadow: 0 4px 10px rgba(215, 38, 96, 0.5);
 }
-
 button:hover {
   background: #ad1850;
   box-shadow: 0 6px 14px rgba(173, 24, 80, 0.8);
 }
-
 .btn-admin {
   position: absolute;
   top: 2rem;
@@ -217,15 +193,12 @@ button:hover {
   align-items: center;
   gap: 8px;
 }
-
 .btn-admin i {
   font-size: 1.2rem;
 }
-
 .btn-admin:hover {
   background: #ad1850;
 }
-
 @media (max-width: 600px) {
   .btn-admin {
     position: static;
