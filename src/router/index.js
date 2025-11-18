@@ -1,3 +1,4 @@
+import { onAuthStateChanged } from "firebase/auth";
 import { createRouter, createWebHistory } from "vue-router";
 import { auth } from "../firebase/init";
 import Admin from "../views/Admin.vue";
@@ -25,13 +26,34 @@ const router = createRouter({
   routes,
 });
 
-// Guard para checar autenticação
-router.beforeEach((to, from, next) => {
-  const requiresAuth = to.meta.requiresAuth;
-  const user = auth.currentUser;
+// Função que retorna uma promise para aguardar o estado do usuário autenticado
+function getCurrentUser() {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe();
+        resolve(user);
+      },
+      reject
+    );
+  });
+}
 
-  if (requiresAuth && !user) {
-    next("/login");
+// Guard para checar autenticação com await na promise
+router.beforeEach(async (to, from, next) => {
+  if (to.meta.requiresAuth) {
+    try {
+      const user = await getCurrentUser();
+      if (user) {
+        next();
+      } else {
+        next("/login");
+      }
+    } catch (error) {
+      console.error("Erro na verificação de autenticação:", error);
+      next("/login");
+    }
   } else {
     next();
   }

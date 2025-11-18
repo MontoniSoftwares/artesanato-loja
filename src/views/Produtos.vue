@@ -56,7 +56,7 @@ function abrirWhatsApp(produto) {
 }
 
 function tentarAcessoAdmin() {
-  router.push("/login"); // Redireciona para tela oficial de login Firebase Auth
+  router.push("/login"); // Redireciona para a tela oficial de login Firebase Auth
 }
 </script>
 
