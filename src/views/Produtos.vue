@@ -30,7 +30,7 @@
 import { collection, getDocs } from "firebase/firestore";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import db from "../firebase/init";
+import { db } from "../firebase/init";
 
 const router = useRouter();
 

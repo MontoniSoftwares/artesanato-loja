@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { auth } from "../firebase/init";
-import Admin from "../pages/Admin.vue";
-import LoginAdmin from "../pages/LoginAdmin.vue";
-import Produtos from "../pages/Produtos.vue";
+import Admin from "../views/Admin.vue";
+import LoginAdmin from "../views/LoginAdmin.vue";
+import Produtos from "../views/Produtos.vue";
 
 // Defina as rotas
 const routes = [

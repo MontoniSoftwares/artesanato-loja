@@ -52,6 +52,7 @@
 </template>
 
 <script setup>
+import { signOut } from "firebase/auth"; // importar signOut para logout
 import {
   addDoc,
   collection,
@@ -62,9 +63,7 @@ import {
 } from "firebase/firestore";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-
-import { signOut } from "firebase/auth"; // importar signOut para logout
-import db, { auth } from "../firebase/init";
+import { db } from "../firebase/init";
 
 const API_KEY_IMGBB = "c84a5731b24f82f3da759d1f73e1c3f1";
 
